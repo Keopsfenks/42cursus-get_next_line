@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: segurbuz <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/12 15:43:49 by segurbuz          #+#    #+#             */
-/*   Updated: 2023/01/12 15:43:50 by segurbuz         ###   ########.fr       */
+/*   Created: 2023/02/03 13:19:55 by segurbuz          #+#    #+#             */
+/*   Updated: 2023/02/03 13:19:56 by segurbuz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,49 +90,4 @@ char	*copy(char *s1, char *s2)
 	str[i] = '\0';
 	free (s1);
 	return (str);
-}
-
-
-char	*linex(int fd, char *buffer)
-{
-	char	*buff;
-	int	byte;
-
-	byte = 1;
-	buff = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (!buff)
-		return (NULL);
-	while(!find_nl(buffer) && byte != 0)
-	{
-		byte = read(fd, buff, BUFFER_SIZE);
-		if (byte == -1)
-		{
-			free (buffer);
-			free (buff);
-			return (NULL);
-		}
-		buff[byte] = '\0';
-		buffer = copy(buffer, buff);
-	}
-	return (buffer);
-}
-
-char	*get_next_line(int fd)
-{
-	char 			*line;
-	static char		*buffer;
-
-	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (0);
-	buffer = linex(fd, buffer);
-	if (buffer == NULL)
-		return (NULL);
-	line = buffer;
-	buffer = new_buffer(buffer);
-	return (line);
-}
-
-int main ()
-{
-
 }
