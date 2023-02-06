@@ -3,95 +3,47 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: segurbuz <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: segurbuz <segurbuz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 15:43:49 by segurbuz          #+#    #+#             */
-/*   Updated: 2023/01/12 15:43:50 by segurbuz         ###   ########.fr       */
+/*   Updated: 2023/02/06 13:46:47 by segurbuz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-size_t	ft_strlen(char *str)
+size_t	strlen_plus(char *buff, int rule)
 {
 	size_t	i;
 
 	i = 0;
-	if (!str)
+	if (!buff)
 		return (0);
-	while (str[i])
-		i++;
+	if (rule == 1)
+	{
+		while (buff[i])
+			i++;
+	}
+	else if(rule == 0)
+	{
+		while (buff[i] && buff[i] != '\n')
+			i++;
+	}
 	return (i);
 }
 
-int	find_nl(char *s1)
+int	find_nl(char *buffer)
 {
 	int	i;
 
 	i = 0;
-	if (!s1)
+	if (!buffer)
 		return (0);
-	while (s1[i++])
-		if (s1[i] == '\n')
+	while (buffer[i++])
+		if (buffer[i] == '\n')
 			return (1);
 	return (0);
 }
-
-char	*new_buffer(char *buffer)
-{
-	char	*new_buffer;
-	int		i;
-	int		j;
-
-	i = 0;
-	j = 0;
-	while (buffer[i] && buffer[i] != '\n')
-		i++;
-	if (!buffer[i])
-	{
-		free (buffer);
-		return (NULL);
-	}
-	new_buffer = malloc (sizeof(char) * (ft_strlen(buffer) - i + 1));
-	if (!new_buffer)
-		return (NULL);
-	i++;
-	while (buffer[i])
-		new_buffer[j++] = buffer[i++];
-	new_buffer[j] = 0;
-	free (buffer);
-	return (new_buffer);
-}
-
-char	*copy(char *s1, char *s2)
-{
-	char	*str;
-	int i;
-	int x;
-	int nl;
-
-	nl = find_nl(s2);
-	if (!s1)
-	{
-		s1 = malloc(sizeof(char));
-		s1[0] = '\0';
-	}
-	if (!s1 || !s2)
-		return (NULL);
-	str = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1 + nl));
-	i = -1;
-	x = 0;
-	while(s1[++i])
-		str[i] = s1[i];
-	while(s2[x] && s2[x] != '\n')
-		str[i++] = s2[x++];
-	if (s2[x] == '\n')
-		str[i++] = '\n';
-	str[i] = '\0';
-	free (s1);
-	return (str);
-}
-
 
 char	*linex(int fd, char *buffer)
 {
@@ -102,37 +54,52 @@ char	*linex(int fd, char *buffer)
 	buff = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buff)
 		return (NULL);
-	while(!find_nl(buffer) && byte != 0)
+	while (!find_nl(buffer) && byte != 0)
 	{
 		byte = read(fd, buff, BUFFER_SIZE);
 		if (byte == -1)
 		{
-			free (buffer);
-			free (buff);
+			free(buffer);
+			free(buff);
 			return (NULL);
 		}
 		buff[byte] = '\0';
 		buffer = copy(buffer, buff);
 	}
+	free(buff);
 	return (buffer);
 }
 
 char	*get_next_line(int fd)
 {
-	char 			*line;
-	static char		*buffer;
+
+	char		*print;
+	static char *buffer;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (0);
+	{
+		free(buffer);
+		return (NULL);
+	}
 	buffer = linex(fd, buffer);
 	if (buffer == NULL)
 		return (NULL);
-	line = buffer;
-	buffer = new_buffer(buffer);
-	return (line);
+	print = get_new_line(buffer);
+	buffer = get_new_buffer(buffer);
+	return (print);
+
 }
 
-int main ()
+
+
+
+/*int main()
 {
+	int fd = open("semih.txt", O_RDONLY);
+ 	int i = 0;
+ 	while(i++ < 20)
+		printf("%s", get_next_line(fd));
+}*/
 
-}
+
+

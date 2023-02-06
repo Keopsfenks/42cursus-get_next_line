@@ -1,93 +1,82 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: segurbuz <marvin@42.fr>                    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/03 13:19:55 by segurbuz          #+#    #+#             */
-/*   Updated: 2023/02/03 13:19:56 by segurbuz         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "get_next_line.h"
 
-size_t	ft_strlen(char *str)
-{
-	size_t	i;
-
-	i = 0;
-	if (!str)
-		return (0);
-	while (str[i])
-		i++;
-	return (i);
-}
-
-int	find_nl(char *s1)
-{
-	int	i;
-
-	i = 0;
-	if (!s1)
-		return (0);
-	while (s1[i++])
-		if (s1[i] == '\n')
-			return (1);
-	return (0);
-}
-
-char	*new_buffer(char *buffer)
+char	*get_new_buffer(char *buffer)
 {
 	char	*new_buffer;
 	int		i;
 	int		j;
 
-	i = 0;
+	i = strlen_plus(buffer, 0);
 	j = 0;
-	while (buffer[i] && buffer[i] != '\n')
-		i++;
 	if (!buffer[i])
 	{
 		free (buffer);
 		return (NULL);
 	}
-	new_buffer = malloc (sizeof(char) * (ft_strlen(buffer) - i + 1));
+	new_buffer = malloc (sizeof(char) * (strlen_plus(buffer, 1) - i + 1));
 	if (!new_buffer)
 		return (NULL);
-	i++;
-	while (buffer[i])
-		new_buffer[j++] = buffer[i++];
-	new_buffer[j] = 0;
+	i+= 1;
+	copy_next(&new_buffer[j], &buffer[i]);
 	free (buffer);
 	return (new_buffer);
 }
 
 char	*copy(char *s1, char *s2)
 {
-	char	*str;
-	int i;
-	int x;
-	int nl;
+	char	*ptr;
+	size_t	i;
 
-	nl = find_nl(s2);
 	if (!s1)
 	{
 		s1 = malloc(sizeof(char));
 		s1[0] = '\0';
 	}
-	if (!s1 || !s2)
+	ptr = malloc(strlen_plus(s1, 1) + strlen_plus(s2, 1) + 1);
+	if (!s1 || !s2 || !ptr)
 		return (NULL);
-	str = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1 + nl));
-	i = -1;
-	x = 0;
-	while(s1[++i])
-		str[i] = s1[i];
-	while(s2[x] && s2[x] != '\n')
-		str[i++] = s2[x++];
-	if (s2[x] == '\n')
-		str[i++] = '\n';
-	str[i] = '\0';
+	i = 0;
+	while (s1[i])
+	{
+		ptr[i] = s1[i];
+		i++;
+	}
+	copy_next(ptr + i, s2);
 	free (s1);
-	return (str);
+	return (ptr);
+}
+
+char	*copy_next(char *dst, char *src)
+{
+	size_t	i;
+
+	i = -1;
+
+	if ((strlen_plus(src, 1) + 1) != 0)
+	{
+		while (src[++i] && i < ((strlen_plus(src, 1) + 1) - 1))
+			dst[i] = src[i];
+		dst[i] = '\0';
+	}
+	return (dst);
+}
+
+char	*get_new_line(char *buffer)
+{
+	char	*line;
+	int		i;
+
+	i = 0;
+	if (!buffer[i])
+		return (NULL);
+	line = malloc(sizeof(char) * (strlen_plus(buffer, 0) + find_nl(buffer) + 1));
+	while (buffer[i] && buffer[i] != '\n')
+	{
+		line[i] = buffer[i];
+		i++;
+	}
+	if (buffer[i] == '\n')
+		line[i++] = '\n';
+	line[i] = 0;
+	return (line);
 }
