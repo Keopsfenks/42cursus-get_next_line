@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 size_t	strlen_plus(char *buff, int rule)
 {
@@ -73,21 +73,20 @@ char	*linex(int fd, char *buffer)
 char	*get_next_line(int fd)
 {
 	char			*print;
-	static char		*buffer;
+	static char		*buffer[1024];
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 	{
-		free(buffer);
+		free(buffer[fd]);
 		return (NULL);
 	}
-	buffer = linex(fd, buffer);
-	if (buffer == NULL)
+	buffer[fd] = linex(fd, buffer[fd]);
+	if (buffer[fd] == NULL)
 		return (NULL);
-	print = get_new_line(buffer);
-	buffer = get_new_buffer(buffer);
+	print = get_new_line(buffer[fd]);
+	buffer[fd] = get_new_buffer(buffer[fd]);
 	return (print);
 }
-
 
 #include <stdio.h>
 #include <fcntl.h>

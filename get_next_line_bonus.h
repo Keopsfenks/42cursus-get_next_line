@@ -10,14 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
 
 # include <stdlib.h>
 # include <unistd.h>
-# include <stddef.h>
-# include "stdio.h"
-# include "fcntl.h"
 
 size_t	strlen_plus(char *buff, int rule);
 int		find_nl(char *s1);
