@@ -12,7 +12,7 @@
 
 #include "get_next_line_bonus.h"
 
-size_t	strlen_plus(char *buff, int rule)
+size_t	strlen_plus(const char *buff, int rule)
 {
 	size_t	i;
 
@@ -51,7 +51,7 @@ char	*linex(int fd, char *buffer)
 	while (!strlen_plus(buffer, 2) && byte != 0)
 	{
 		byte = read(fd, buff, BUFFER_SIZE);
-		if (byte == -1)
+		if (byte < 0)
 		{
 			free(buffer);
 			free(buff);
@@ -77,7 +77,7 @@ char	*get_next_line(int fd)
 	buffer[fd] = linex(fd, buffer[fd]);
 	if (buffer[fd] == NULL)
 		return (NULL);
-	print = get_new_line(buffer[fd]);
+	print = read_line(buffer[fd]);
 	buffer[fd] = get_new_buffer(buffer[fd]);
 	return (print);
 }

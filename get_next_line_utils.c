@@ -72,24 +72,41 @@ char	*copy_next(char *dst, char *src)
 	return (dst);
 }
 
-char	*get_new_line(char *buffer)
+char	*read_line(char	*str)
 {
-	char	*line;
-	int		i;
-	int		nl;
+	size_t	i;
+	char	*result;
 
-	nl = strlen_plus(buffer, 2);
-	i = 0;
-	if (!buffer[i])
+	if (!*str)
 		return (NULL);
-	line = malloc(sizeof(char) * (strlen_plus(buffer, 0) + nl + 1));
-	while (buffer[i] && buffer[i] != '\n')
+	i = 0;
+	while (str[i] && str[i] != '\n')
+		i++;
+	result = ft_substr(str, 0, i + 1);
+	if (str[i] == '\n')
+		result[i++] = '\n';
+	result[i] = '\0';
+	return (result);
+}
+
+char	*ft_substr(const char *s, unsigned int start, size_t len)
+{
+	size_t	i;
+	char	*result;
+
+	if (!s)
+		return (0);
+	if (strlen_plus(s, 1) < len)
+		len = strlen_plus(s, 1);
+	result = malloc(sizeof(char) * len + 1);
+	if (!result)
+		return (NULL);
+	i = 0;
+	while (i < len && s[i])
 	{
-		line[i] = buffer[i];
+		result[i] = s[start + i];
 		i++;
 	}
-	if (buffer[i] == '\n')
-		line[i++] = '\n';
-	line[i] = 0;
-	return (line);
+	result[i] = 0;
+	return (result);
 }

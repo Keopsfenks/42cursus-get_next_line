@@ -16,16 +16,16 @@
 # include <stdlib.h>
 # include <unistd.h>
 
-size_t	strlen_plus(char *buff, int rule);
-int		find_nl(char *s1);
+size_t	strlen_plus(const char *buff, int rule);
 char	*get_new_buffer(char *buffer);
 char	*copy(char *s1, char *s2);
 char	*linex(int fd, char *buffer);
 char	*get_next_line(int fd);
-char	*get_new_line(char *buffer);
+char	*read_line(char	*str);
+char	*ft_substr(const char *s, unsigned int start, size_t len);
 char	*copy_next(char *dst, char *src);
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 31
+#  define BUFFER_SIZE 100
 # endif
 #endif
