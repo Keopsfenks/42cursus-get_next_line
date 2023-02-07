@@ -29,20 +29,14 @@ size_t	strlen_plus(char *buff, int rule)
 		while (buff[i] && buff[i] != '\n')
 			i++;
 	}
+	else if (rule == 2)
+	{
+		while (buff[i++])
+			if (buff[i] == '\n')
+				return (1);
+		i = 0;
+	}
 	return (i);
-}
-
-int	find_nl(char *buffer)
-{
-	int	i;
-
-	i = 0;
-	if (!buffer)
-		return (0);
-	while (buffer[i++])
-		if (buffer[i] == '\n')
-			return (1);
-	return (0);
 }
 
 char	*linex(int fd, char *buffer)
@@ -54,7 +48,7 @@ char	*linex(int fd, char *buffer)
 	buff = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buff)
 		return (NULL);
-	while (!find_nl(buffer) && byte != 0)
+	while (!strlen_plus(buffer, 2) && byte != 0)
 	{
 		byte = read(fd, buff, BUFFER_SIZE);
 		if (byte == -1)
@@ -86,25 +80,4 @@ char	*get_next_line(int fd)
 	print = get_new_line(buffer);
 	buffer = get_new_buffer(buffer);
 	return (print);
-}
-
-
-#include <stdio.h>
-#include <fcntl.h>
-int main()
-{
-	int fd1 = open("ft_txt", O_RDONLY);
-	int fd2 = open("got_txt", O_RDONLY);
-
-	int a = 0;
-	char *str;
-	char *s;
-	while ((str = get_next_line(fd1)) && (s = get_next_line(fd2)))
-	{
-		printf("%d %s", a, str);
-		printf("%d %s", a, s);
-		a++;
-		free(str);
-	}
-	return (0);
 }

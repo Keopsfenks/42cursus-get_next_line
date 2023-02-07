@@ -78,7 +78,7 @@ char	*get_new_line(char *buffer)
 	int		i;
 	int		nl;
 
-	nl = find_nl(buffer);
+	nl = strlen_plus(buffer, 2);
 	i = 0;
 	if (!buffer[i])
 		return (NULL);

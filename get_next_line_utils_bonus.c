@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: segurbuz <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/07 00:52:05 by segurbuz          #+#    #+#             */
-/*   Updated: 2023/02/07 00:52:07 by segurbuz         ###   ########.fr       */
+/*   Created: 2023/02/07 02:36:46 by segurbuz          #+#    #+#             */
+/*   Updated: 2023/02/07 02:36:48 by segurbuz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ char	*get_new_line(char *buffer)
 	int		i;
 	int		nl;
 
-	nl = find_nl(buffer);
+	nl = strlen_plus(buffer, 2);
 	i = 0;
 	if (!buffer[i])
 		return (NULL);
